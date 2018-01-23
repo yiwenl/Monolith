@@ -1,6 +1,5 @@
 
 const assetsToLoad = [
-	{"id":"monolith","url":"assets/obj/monolith.obj","type":"text"},
 	{"id":"height","url":"assets/img/height.jpg","type":"jpg"},
 	{"id":"heightDetails","url":"assets/img/heightDetails.jpg","type":"jpg"},
 	{"id":"heightMap","url":"assets/img/heightMap.jpg","type":"jpg"},
@@ -13,7 +12,8 @@ const assetsToLoad = [
 	{"id":"irr_posz","url":"assets/img/irr_posz.hdr","type":"binary"},
 	{"id":"noise","url":"assets/img/noise.png","type":"png"},
 	{"id":"normal","url":"assets/img/normal.jpg","type":"jpg"},
-	{"id":"studio_radiance","url":"assets/img/studio_radiance.dds","type":"binary"}
+	{"id":"studio_radiance","url":"assets/img/studio_radiance.dds","type":"binary"},
+	{"id":"monolith","url":"assets/obj/monolith.obj","type":"text"}
 ];
 
 

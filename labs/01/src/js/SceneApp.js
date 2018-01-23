@@ -4,6 +4,7 @@ import alfrid, { Scene, GL } from 'alfrid';
 import ViewTerrain from './ViewTerrain';
 import ViewTerrainTile from './ViewTerrainTile';
 import ViewSquare from './ViewSquare';
+import ViewNoise from './ViewNoise';
 import Assets from './Assets';
 
 class SceneApp extends Scene {
@@ -30,6 +31,13 @@ class SceneApp extends Scene {
 
 	_initTextures() {
 		console.log('init textures');
+
+		const size = 2048;
+		const o = {
+			minFilter:GL.LINEAR,
+			magFilter:GL.LINEAR
+		};
+		this._fboTerrain = new alfrid.FrameBuffer(size, size, o, 2);
 	}
 
 
@@ -44,6 +52,12 @@ class SceneApp extends Scene {
 		this._vTerrain = new ViewTerrain();
 		this._vTerrainTile = new ViewTerrainTile();
 		this._vSquare = new ViewSquare();
+		this._vNoise = new ViewNoise();
+
+		this._fboTerrain.bind();
+		GL.clear();
+		this._vNoise.render();
+		this._fboTerrain.unbind();
 	}
 
 
@@ -53,11 +67,7 @@ class SceneApp extends Scene {
 		GL.rotate(this.normalMatrix);
 
 		this._bAxis.draw();
-		if(!this.useTile) {
-			this._vTerrain.render(this._lightPos);	
-		} else {
-			this._vTerrainTile.render(this._lightPos);	
-		}
+		this._vTerrainTile.render(this._lightPos, this.heightMap);	
 		
 		
 
@@ -66,6 +76,14 @@ class SceneApp extends Scene {
 		// GL.disable(GL.DEPTH_TEST);
 		this._bBall.draw(this._lightPos, [.1, .1, .1], [1, 0, 0])
 		// GL.enable(GL.DEPTH_TEST);
+
+		/*/
+		const s = 300;
+		GL.viewport(0, 0, s, s);
+		this._bCopy.draw(this.heightMap);
+		GL.viewport(s, 0, s, s);
+		this._bCopy.draw(this._fboTerrain.getTexture(1));
+		//*/
 	}
 
 
@@ -73,6 +91,10 @@ class SceneApp extends Scene {
 		const { innerWidth, innerHeight, devicePixelRatio } = window;
 		GL.setSize(innerWidth, innerHeight);
 		this.camera.setAspectRatio(GL.aspectRatio);
+	}
+
+	get heightMap() {
+		return this._fboTerrain.getTexture(0);
 	}
 }
 
