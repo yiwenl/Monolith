@@ -26,14 +26,9 @@ void main(void) {
 	normal.y *= 0.5;
 	normal = normalize(normal);
 
-	// const vec3 LIGHT = vec3(0.0, 10.0, 0.0);
-	// vec3 dirLight = vPosition - LIGHT;
 	vec3 dirLight = uLightPos - vPosition;
-	// vec3 dirLight = uLightPos - vPosition;
-	// vec3 dirLight = uLightPos - vPosition;
-
 	float d = diffuse(normal, dirLight);
-	// d = mix(d, 1.0, .5);
 
     gl_FragColor = vec4(vec3(d), 1.0);
+    gl_FragColor = vec4(vec3(vPosition.y), 1.0);
 }

@@ -17,9 +17,7 @@ class ViewTerrain extends alfrid.View {
 		this.mesh = alfrid.Geom.plane(size, size, 100, 'xz');
 		this.texture = Assets.get('height');
 		this.textureNormal = Assets.get('normal');
-
 		this.height = 1.0;
-		gui.add(this, 'height', 0, 3);
 	}
 
 
@@ -31,6 +29,8 @@ class ViewTerrain extends alfrid.View {
 		this.textureNormal.bind(1);
 		this.shader.uniform("uHeight", "float", this.height);
 		this.shader.uniform("uLightPos", "vec3", lightPos);
+
+		this.shader.uniform("uUVOffset", "vec4", [1, 1, 0, 0]);
 		GL.draw(this.mesh);
 	}
 

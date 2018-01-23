@@ -2,6 +2,7 @@
 
 import alfrid, { Scene, GL } from 'alfrid';
 import ViewTerrain from './ViewTerrain';
+import ViewTerrainTile from './ViewTerrainTile';
 import ViewSquare from './ViewSquare';
 import Assets from './Assets';
 
@@ -20,11 +21,11 @@ class SceneApp extends Scene {
 
 		this._lightSource = vec3.fromValues(0, 1.5, -1);
 		this._lightPos = vec3.create();
-
-		gui.add(this.orbitalControl.radius, 'value', 1, 5);
-
 		this.normalMatrix = mat4.create();
 		// mat4.translate(this.normalMatrix, this.normalMatrix, vec3.fromValues(0, -1, 0));
+
+		this.useTile = true;
+		gui.add(this, 'useTile');
 	}
 
 	_initTextures() {
@@ -41,6 +42,7 @@ class SceneApp extends Scene {
 		this._bBall = new alfrid.BatchBall();
 
 		this._vTerrain = new ViewTerrain();
+		this._vTerrainTile = new ViewTerrainTile();
 		this._vSquare = new ViewSquare();
 	}
 
@@ -51,7 +53,14 @@ class SceneApp extends Scene {
 		GL.rotate(this.normalMatrix);
 
 		this._bAxis.draw();
-		this._vTerrain.render(this._lightPos);
+		if(!this.useTile) {
+			this._vTerrain.render(this._lightPos);	
+		} else {
+			this._vTerrainTile.render(this._lightPos);	
+		}
+		
+		
+
 		// this._vSquare.render();
 
 		// GL.disable(GL.DEPTH_TEST);
