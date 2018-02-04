@@ -1,7 +1,6 @@
 // SceneApp.js
 
 import alfrid, { Scene, GL } from 'alfrid';
-import ViewTerrain from './ViewTerrain';
 import ViewTerrainTile from './ViewTerrainTile';
 import ViewSquare from './ViewSquare';
 import ViewNoise from './ViewNoise';
@@ -35,7 +34,8 @@ class SceneApp extends Scene {
 		const size = 2048;
 		const o = {
 			minFilter:GL.LINEAR,
-			magFilter:GL.LINEAR
+			magFilter:GL.LINEAR,
+			type:GL.FLOAT
 		};
 		this._fboTerrain = new alfrid.FrameBuffer(size, size, o, 2);
 	}
@@ -49,7 +49,6 @@ class SceneApp extends Scene {
 		this._bDots = new alfrid.BatchDotsPlane();
 		this._bBall = new alfrid.BatchBall();
 
-		this._vTerrain = new ViewTerrain();
 		this._vTerrainTile = new ViewTerrainTile();
 		this._vSquare = new ViewSquare();
 		this._vNoise = new ViewNoise();
@@ -67,7 +66,7 @@ class SceneApp extends Scene {
 		GL.rotate(this.normalMatrix);
 
 		this._bAxis.draw();
-		this._vTerrainTile.render(this._lightPos, this.heightMap);	
+		this._vTerrainTile.render(this._lightPos, this.heightMap, this.normalMap, Assets.get('studio_radiance'), Assets.get('irr'));	
 		
 		
 
@@ -77,12 +76,12 @@ class SceneApp extends Scene {
 		this._bBall.draw(this._lightPos, [.1, .1, .1], [1, 0, 0])
 		// GL.enable(GL.DEPTH_TEST);
 
-		/*/
-		const s = 300;
+		//*/
+		const s = 200;
 		GL.viewport(0, 0, s, s);
 		this._bCopy.draw(this.heightMap);
 		GL.viewport(s, 0, s, s);
-		this._bCopy.draw(this._fboTerrain.getTexture(1));
+		this._bCopy.draw(this.normalMap);
 		//*/
 	}
 
@@ -95,6 +94,10 @@ class SceneApp extends Scene {
 
 	get heightMap() {
 		return this._fboTerrain.getTexture(0);
+	}
+
+	get normalMap() {
+		return this._fboTerrain.getTexture(1);
 	}
 }
 

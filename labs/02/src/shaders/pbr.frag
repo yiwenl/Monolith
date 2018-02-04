@@ -1,19 +1,13 @@
-// copy.frag
+// pbr.frag
 
 #extension GL_EXT_shader_texture_lod : enable
 
-
 precision highp float;
-uniform sampler2D texture;
-uniform sampler2D textureNormal;
-uniform vec3 uLightPos;
 
+uniform sampler2D 	uAoMap;
 uniform samplerCube uRadianceMap;
 uniform samplerCube uIrradianceMap;
 
-
-uniform mat3 		uModelViewMatrixInverse;
-uniform mat3 		uNormalMatrix;
 uniform vec3		uBaseColor;
 uniform float		uRoughness;
 uniform float		uRoughness4;
@@ -29,19 +23,6 @@ varying vec3		vEyePosition;
 varying vec3		vWsNormal;
 varying vec3		vWsPosition;
 varying vec2 		vTextureCoord;
-
-float diffuse(vec3 N, vec3 L) {
-	return max(dot(N, normalize(L)), 0.0);
-}
-
-
-vec3 diffuse(vec3 N, vec3 L, vec3 C) {
-	return diffuse(N, L) * C;
-}
-
-const vec3 LIGHT = vec3(1.0, .8, .6);
-
-
 
 #define saturate(x) clamp(x, 0.0, 1.0)
 #define PI 3.1415926535897932384626433832795
@@ -115,22 +96,14 @@ vec3 getPbr(vec3 N, vec3 V, vec3 baseColor, float roughness, float metallic, flo
 	return color;
 }
 
-
-void main(void) {
-
-	float height = texture2D(texture, vTextureCoord).r;
-	height = smoothstep(0.25, 0.75, height);
-	vec3 normal = texture2D(textureNormal, vTextureCoord).rgb;
-
-	vec3 N 				= uNormalMatrix * uModelViewMatrixInverse * normalize( normal );
+void main() {
+	vec3 N 				= normalize( vWsNormal );
 	vec3 V 				= normalize( vEyePosition );
-
-	// vec3 dirLight = vPosition - uLightPos;
-	// float d = diffuse(N, dirLight);
-
+	
 	vec3 color 			= getPbr(N, V, uBaseColor, uRoughness, uMetallic, uSpecular);
-	// float d = diffuse(normal, LIGHT);
-	// d = mix(d, 1.0, .15);
+
+	vec3 ao 			= texture2D(uAoMap, vTextureCoord).rgb;
+	color 				*= ao;
 
 	// apply the tone-mapping
 	color				= Uncharted2Tonemap( color * uExposure );
@@ -141,10 +114,6 @@ void main(void) {
 	color				= pow( color, vec3( 1.0 / uGamma ) );
 
 	// output the fragment color
-    gl_FragColor		= vec4( color * height, 1.0 );
+    gl_FragColor		= vec4( color, 1.0 );
 
-    // gl_FragColor = vec4(vec3(d), 1.0);
-    // gl_FragColor = vec4(vec3(vWsPosition.y), 1.0);
-    // gl_FragColor = vec4(height, 1.0);
-    // gl_FragColor = vec4(normal, 1.0);
 }

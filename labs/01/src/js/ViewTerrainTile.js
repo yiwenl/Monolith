@@ -14,28 +14,44 @@ class ViewTerrainTile extends alfrid.View {
 
 	_init() {
 		const size = 10;
-		this.numTiles = 4 * 2;
+		this.numTiles = 4 * 1;
 		const s = size / this.numTiles;
 		this.tileSize = s;
 		this.sx = -size / 2 + this.tileSize/2;
 		this.sz = size / 2 - this.tileSize/2;
 		this.mesh = alfrid.Geom.plane(s, s, 100, 'xz');
 
-		this.texture = Assets.get('height');
-		this.textureNormal = Assets.get('normal');
-		this.height = 1.0;
+		this.height = 1.5;
+
+		this.roughness = 1;
+		this.specular = 0;
+		this.metallic = 0;
+		this.baseColor = [1, 1, 1];
 	}
 
 
-	render(lightPos) {
+	render(lightPos, texture, textureNormal, textureRad, textureIrr) {
 		const { numTiles } = this;
 		this.shader.bind();
 		this.shader.uniform("texture", "uniform1i", 0);
-		this.texture.bind(0);
+		texture.bind(0);
 		this.shader.uniform("textureNormal", "uniform1i", 1);
-		this.textureNormal.bind(1);
+		textureNormal.bind(1);
 		this.shader.uniform("uHeight", "float", this.height);
 		this.shader.uniform("uLightPos", "vec3", lightPos);
+
+		this.shader.uniform('uRadianceMap', 'uniform1i', 3);
+		this.shader.uniform('uIrradianceMap', 'uniform1i', 2);
+		textureRad.bind(3);
+		textureIrr.bind(2);
+
+		this.shader.uniform('uBaseColor', 'uniform3fv', this.baseColor);
+		this.shader.uniform('uRoughness', 'uniform1f', this.roughness);
+		this.shader.uniform('uMetallic', 'uniform1f', this.metallic);
+		this.shader.uniform('uSpecular', 'uniform1f', this.specular);
+
+		this.shader.uniform('uExposure', 'uniform1f', params.exposure);
+		this.shader.uniform('uGamma', 'uniform1f', params.gamma);
 
 		const uvOffset = [1/numTiles, 1/numTiles, 0, 0];
 		let u, v, x, z;
