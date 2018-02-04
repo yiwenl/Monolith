@@ -14,10 +14,31 @@ class SceneApp extends Scene {
 		this.resize();
 		GL.enableAlphaBlending();
 		this.orbitalControl.rx.value = this.orbitalControl.ry.value = 0.3;
-		this.orbitalControl.radius.value = 5;
+		this.orbitalControl.radius.value = 11;
 
 		this._mtxRotationMono = mat4.create();
 
+		const f = gui.addFolder('Camera');
+		const cam = {
+			y:0
+		}
+
+		const updateCameraY = () => {
+			this.orbitalControl.center[1] = cam.y;
+			this.orbitalControl.positionOffset[1] = cam.y;
+		}
+
+		updateCameraY();
+
+		f.add(this.orbitalControl.radius, 'value', 5, 20).name('Zoom');
+		f.add(cam, 'y', -10, 10).name('Camera Y').onChange( updateCameraY );
+		f.open();
+
+		const fMono = gui.addFolder('monolith');
+		fMono.open();
+		fMono.add(params.monolith, 'uRoughness', 0, 1);
+		fMono.add(params.monolith, 'uSpecular', 0, 1);
+		fMono.add(params.monolith, 'uMetallic', 0, 1);
 	}
 
 	_initTextures() {
@@ -59,8 +80,8 @@ class SceneApp extends Scene {
 		this._bDots.draw();
 
 		// this._vModel.render(Assets.get('studio_radiance'), Assets.get('irr'), Assets.get('aomap'));
-		this._vMono.render(this._captureSphere.front, this._captureSphere.back, this._captureSphere.frontMatrix, this._captureSphere.backMatrix);
-		this._vSphere.render(this._captureCylinder.front, this._captureCylinder.back, this._captureCylinder.frontMatrix, this._captureCylinder.backMatrix);
+		this._vMono.render(this._captureSphere.front, this._captureSphere.back, this._captureSphere.frontMatrix, this._captureSphere.backMatrix, Assets.get('studio_radiance'), Assets.get('irr'));
+		this._vSphere.render(this._captureCylinder.front, this._captureCylinder.back, this._captureCylinder.frontMatrix, this._captureCylinder.backMatrix, Assets.get('studio_radiance'), Assets.get('irr'));
 		// this._vMono.renderPosition();
 		// this._vSphere.render();
 

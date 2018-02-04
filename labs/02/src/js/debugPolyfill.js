@@ -3,5 +3,11 @@
 window.gui = {
 	add:()=>{
 
+	},
+	addFolder:()=>{
+
+	},
+	addColor:()=>{
+
 	}
 };

@@ -16,7 +16,13 @@ if(document.body) {
 
 window.params = {
 	gamma:2.2,
-	exposure:5
+	exposure:5,
+	monolith: {
+		uRoughness:1,
+		uSpecular:0,
+		uMetallic:0,
+		uBaseColor:[1, 1, 1]
+	}
 };
 
 function _init() {

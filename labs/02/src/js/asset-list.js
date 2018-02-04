@@ -1,7 +1,10 @@
 
 const assetsToLoad = [
 	{"id":"aomap","url":"assets/img/aomap.jpg","type":"jpg"},
+	{"id":"concreteDiffuse","url":"assets/img/concreteDiffuse.jpg","type":"jpg"},
+	{"id":"concreteNormal","url":"assets/img/concreteNormal.jpg","type":"jpg"},
 	{"id":"height","url":"assets/img/height.jpg","type":"jpg"},
+	{"id":"ink","url":"assets/img/ink.jpg","type":"jpg"},
 	{"id":"irr_negx","url":"assets/img/irr_negx.hdr","type":"binary"},
 	{"id":"irr_negy","url":"assets/img/irr_negy.hdr","type":"binary"},
 	{"id":"irr_negz","url":"assets/img/irr_negz.hdr","type":"binary"},
