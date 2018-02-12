@@ -3,6 +3,7 @@
 import alfrid, { Scene, GL } from 'alfrid';
 import ViewMonolith from './ViewMonolith';
 import ViewSphere from './ViewSphere';
+import ViewTerrain from './ViewTerrain';
 import PositionCapture from './PositionCapture';
 import Assets from './Assets';
 
@@ -56,6 +57,7 @@ class SceneApp extends Scene {
 		// this._vModel = new ViewObjModel();
 		this._vMono = new ViewMonolith();
 		this._vSphere = new ViewSphere();
+		this._vTerrain = new ViewTerrain();
 
 		this._captureCylinder = new PositionCapture();
 		this._captureSphere = new PositionCapture();
@@ -78,6 +80,8 @@ class SceneApp extends Scene {
 
 		this._bAxis.draw();
 		this._bDots.draw();
+
+		this._vTerrain.render(this.heightMap, this.normalMap, Assets.get('studio_radiance'), Assets.get('irr'));	
 
 		// this._vModel.render(Assets.get('studio_radiance'), Assets.get('irr'), Assets.get('aomap'));
 		this._vMono.render(this._captureSphere.front, this._captureSphere.back, this._captureSphere.frontMatrix, this._captureSphere.backMatrix, Assets.get('studio_radiance'), Assets.get('irr'));
@@ -107,6 +111,14 @@ class SceneApp extends Scene {
 		const { innerWidth, innerHeight, devicePixelRatio } = window;
 		GL.setSize(innerWidth, innerHeight);
 		this.camera.setAspectRatio(GL.aspectRatio);
+	}
+
+	get heightMap() {
+		return Assets.get('height');
+	}
+
+	get normalMap() {
+		return Assets.get('height');
 	}
 }
 

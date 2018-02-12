@@ -56,7 +56,7 @@ class ViewSphere extends alfrid.View {
 		this.shader.uniform("uMatrixBack", "mat4", mtxBack);
 
 		this.shader.uniform("textureDiffuse", "uniform1i", 2);
-		Assets.get('concreteDiffuse').bind(2);
+		Assets.get('ink').bind(2);
 
 		this.shader.uniform("textureNormal", "uniform1i", 3);
 		Assets.get('concreteNormal').bind(3);
@@ -70,6 +70,8 @@ class ViewSphere extends alfrid.View {
 		this.shader.uniform('uExposure', 'uniform1f', params.exposure);
 		this.shader.uniform('uGamma', 'uniform1f', params.gamma);
 		this.shader.uniform(params.monolith);
+
+		this.shader.uniform("uResolution", "vec2", [window.innerWidth, window.innerHeight]);
 
 		GL.draw(this.mesh);
 	}

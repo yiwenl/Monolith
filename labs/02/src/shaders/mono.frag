@@ -20,6 +20,7 @@ uniform float		uSpecular;
 
 uniform float		uExposure;
 uniform float		uGamma;
+uniform vec2		uResolution;
 
 varying vec3        vNormal;
 varying vec3        vPosition;
@@ -123,15 +124,17 @@ void main(void) {
 	if(t < 0.5) {	discard;	}
 
 	vec3 nOffset 		= texture2D( textureNormal, vTextureCoord).rgb;
-	vec3 N 				= normalize( vWsNormal + nOffset * 0.5 );
+	vec3 N 				= normalize( vWsNormal + nOffset * 0.15 );
 	vec3 V 				= normalize( vEyePosition );
-	vec3 baseColor 		= texture2D( textureDiffuse, vTextureCoord).rgb;
-	vec3 color 			= getPbr(N, V, baseColor, uRoughness, uMetallic, uSpecular);
+	vec3 ink 			= texture2D( textureDiffuse, gl_FragCoord.xy/uResolution).rgb;
+	vec3 color 			= getPbr(N, V, ink, uRoughness, uMetallic, uSpecular);
 
 	float angleToUp = dot(vNormal, UP);
 	angleToUp = smoothstep(0.5, 0.7, angleToUp);
 	float yOffset = smoothstep(0.25, 0.75, vWsPosition.y);
 	float br = angleToUp;
+
+
 
 	// apply the tone-mapping
 	color				= Uncharted2Tonemap( color * uExposure );
@@ -141,8 +144,11 @@ void main(void) {
 	// gamma correction
 	color				= pow( color, vec3( 1.0 / uGamma ) );
 
+	// color = mix(color, vec3(ink), .75);
+
 	// output the fragment color
     gl_FragColor		= vec4( color, 1.0 );
-    // gl_FragColor		= vec4( vTextureCoord, 1.0, 1.0 );
+    // gl_FragColor		= vec4( ink, 1.0 );
+    // gl_FragColor		= vec4( gl_FragCoord.xy/uResolution, 1.0, 1.0 );
 
 }
