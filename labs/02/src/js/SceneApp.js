@@ -7,6 +7,7 @@ import ViewTerrain from './ViewTerrain';
 import ViewSave from './ViewSave';
 import ViewRender from './ViewRender';
 import ViewSim from './ViewSim';
+import ViewFarground from './ViewFarground';
 import PositionCapture from './PositionCapture';
 import Assets from './Assets';
 
@@ -19,7 +20,7 @@ class SceneApp extends Scene {
 		this._count = 0;
 		this.resize();
 		GL.enableAlphaBlending();
-		this.orbitalControl.rx.value = this.orbitalControl.ry.value = 0.3;
+		this.orbitalControl.rx.value = this.orbitalControl.ry.value = -0.1;
 		this.orbitalControl.radius.value = 11;
 
 		this._mtxRotationMono = mat4.create();
@@ -38,10 +39,10 @@ class SceneApp extends Scene {
 
 		f.add(this.orbitalControl.radius, 'value', 5, 20).name('Zoom');
 		f.add(cam, 'y', -10, 10).name('Camera Y').onChange( updateCameraY );
-		f.open();
+		// f.open();
 
 		const fMono = gui.addFolder('monolith');
-		fMono.open();
+		// fMono.open();
 		fMono.add(params.monolith, 'uRoughness', 0, 1);
 		fMono.add(params.monolith, 'uSpecular', 0, 1);
 		fMono.add(params.monolith, 'uMetallic', 0, 1);
@@ -57,8 +58,10 @@ class SceneApp extends Scene {
 			type:GL.FLOAT
 		};
 
-		this._fboCurrent  	= new alfrid.FrameBuffer(numParticles, numParticles, o, 3);
-		this._fboTarget  	= new alfrid.FrameBuffer(numParticles, numParticles, o, 3);
+		const numTargets = 4;
+
+		this._fboCurrent  	= new alfrid.FrameBuffer(numParticles, numParticles, o, numTargets);
+		this._fboTarget  	= new alfrid.FrameBuffer(numParticles, numParticles, o, numTargets);
 	}
 
 
@@ -73,6 +76,7 @@ class SceneApp extends Scene {
 		this._vMono = new ViewMonolith();
 		this._vSphere = new ViewSphere();
 		this._vTerrain = new ViewTerrain();
+		this._vFarground = new ViewFarground();
 
 		this._captureCylinder = new PositionCapture();
 		this._captureSphere = new PositionCapture();
@@ -104,7 +108,12 @@ class SceneApp extends Scene {
 	updateFbo() {
 		this._fboTarget.bind();
 		GL.clear(0, 0, 0, 1);
-		this._vSim.render(this._fboCurrent.getTexture(1), this._fboCurrent.getTexture(0), this._fboCurrent.getTexture(2));
+		this._vSim.render(
+			this._fboCurrent.getTexture(1), 
+			this._fboCurrent.getTexture(0), 
+			this._fboCurrent.getTexture(2),
+			this._fboCurrent.getTexture(3)
+		);
 		this._fboTarget.unbind();
 
 
@@ -142,10 +151,7 @@ class SceneApp extends Scene {
 		GL.setMatrices(this.camera);
 		GL.clear(0, 0, 0, 0);
 
-		// this._bSky.draw(Assets.get('studio_radiance'));
-
-		this._bAxis.draw();
-		this._bDots.draw();
+		this._vFarground.render();
 
 		this._vTerrain.render(this.heightMap, this.normalMap, Assets.get('studio_radiance'), Assets.get('irr'));	
 
@@ -155,12 +161,18 @@ class SceneApp extends Scene {
 		this._renderParticles();
 
 		// this._vMono.renderPosition();
+		// this._vMono.renderPosition();
 		// this._vSphere.render();
 
 
-		let s = 200;
-		GL.viewport(0, 0, s, s);
-		this._bCopy.draw(this._fboCurrent.getTexture(0));
+		/*
+		let s = 100;
+
+		for(let i=0; i<4; i++) {
+			GL.viewport(i*s, 0, s, s);
+			this._bCopy.draw(this._fboCurrent.getTexture(i));	
+		}
+		*/		
 
 		/*
 		let s = 200;

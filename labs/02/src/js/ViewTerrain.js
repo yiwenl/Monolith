@@ -13,12 +13,12 @@ class ViewTerrain extends alfrid.View {
 
 	_init() {
 		const size = 25;
-		this.numTiles = 4 * 1;
+		this.numTiles = 2;
 		const s = size / this.numTiles;
 		this.tileSize = s;
 		this.sx = -size / 2 + this.tileSize/2;
 		this.sz = size / 2 - this.tileSize/2;
-		this.mesh = alfrid.Geom.plane(s, s, 100, 'xz');
+		this.mesh = alfrid.Geom.plane(s, s, 80, 'xz');
 
 		this.height = 1.5;
 

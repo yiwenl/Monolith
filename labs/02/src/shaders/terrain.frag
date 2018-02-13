@@ -6,6 +6,16 @@ precision highp float;
 varying vec2 vTextureCoord;
 uniform sampler2D texture;
 
+varying vec3 vWsPosition;
+
+
 void main(void) {
-    gl_FragColor = texture2D(texture, vTextureCoord);
+	vec4 color = texture2D(texture, vTextureCoord);
+
+	float d = length(vWsPosition.xz);
+	d = smoothstep(12.5, 0.0, d);
+
+	color.rgb *= d;
+
+    gl_FragColor = color;
 }

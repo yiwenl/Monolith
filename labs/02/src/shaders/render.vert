@@ -34,7 +34,9 @@ void main(void) {
 	float g 	 = sin(extra.r + time * mix(extra.b, 1.0, .5));
 	g 			 = smoothstep(0.0, 1.0, g);
 	g 			 = mix(g, 1.0, .75);
-	vColor       = vec4(vec3(g), 1.0);
+	float a 	 = 1.0;
+	if(posNext.y < posCurr.y) a = 0.0;
+	vColor       = vec4(vec3(g), a);
 
 	float distOffset = uViewport.y * uProjectionMatrix[1][1] * radius / gl_Position.w;
     gl_PointSize = distOffset * (1.0 + extra.x * 1.0);

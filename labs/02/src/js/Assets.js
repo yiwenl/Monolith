@@ -1,7 +1,7 @@
 // Assets.js
 
 import assetsToLoad from './asset-list';
-import alfrid, { GLTexture, GLCubeTexture, Mesh, ObjLoader } from 'alfrid';
+import alfrid, { GL, GLTexture, GLCubeTexture, Mesh, ObjLoader } from 'alfrid';
 
 const Assets = {};
 let _assets = [];
@@ -25,7 +25,10 @@ Assets.init = function() {
 		switch(ext) {
 			case 'jpg':
 			case 'png':
-				texture = new GLTexture(file);
+				texture = new GLTexture(file, {
+					wrapS:GL.MIRRORED_REPEAT,
+					wrapT:GL.MIRRORED_REPEAT,
+				});
 				return {
 					id:o.id,
 					file:texture

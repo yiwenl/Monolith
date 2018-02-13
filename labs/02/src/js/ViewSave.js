@@ -35,6 +35,7 @@ class ViewSave extends alfrid.View {
 			mat4.rotateZ(m, m, Math.random() * Math.PI * 2);
 
 			vec3.transformMat4(v, v, m);
+			v[1] = random(-params.maxRadius, 10.0);
 			return v;
 		}
 

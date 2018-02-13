@@ -19,7 +19,7 @@ window.params = {
 	exposure:5,
 	numParticles:256,
 	skipCount:6,
-	maxRadius: 3.5,
+	maxRadius: 1.,
 	monolith: {
 		uRoughness:1,
 		uSpecular:0,

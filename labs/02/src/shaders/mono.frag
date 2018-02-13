@@ -148,6 +148,7 @@ void main(void) {
 
 	// output the fragment color
     gl_FragColor		= vec4( color, 1.0 );
+    // gl_FragColor		= vec4( vNormal, 1.0 );
     // gl_FragColor		= vec4( ink, 1.0 );
     // gl_FragColor		= vec4( gl_FragCoord.xy/uResolution, 1.0, 1.0 );
 

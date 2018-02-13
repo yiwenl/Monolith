@@ -35,12 +35,83 @@ class ViewMonolith extends alfrid.View {
 
 
 	_init() {
-		this.mesh = Assets.get('cylinder');
+		const h = 3;
+		const r = 0.5;
+		const num = 7;
+		const positions = [];
+		const normals = [];
+		const uvs = [];
+		const indices = [];
+		let count = 0;
 
-		this.roughness = 1;
-		this.specular = 0;
-		this.metallic = 0;
-		this.baseColor = [1, 1, 1];
+		let angles = [];
+		let total = 0;
+		for(let i=0; i<num; i++) {
+			let a = random(.1, .5);
+			angles.push(a);
+			total += a;
+		}
+
+		angles = angles.map( a=> a/total);
+		let t = 0;
+		angles = angles.map( a => {
+			let na = a + t;
+			t += a;
+			return na;
+		});
+		angles.unshift(0);
+
+		const getPos = (i, j) => {
+			// let a = i/num * Math.PI * 2.0;
+			let a = angles[i] * Math.PI * 2.0;
+			const y = (j - .5 ) * h;
+			const x = Math.cos(a) * r;
+			const z = Math.sin(a) * r;
+			return [x, y, z];
+		}
+
+		const getNormal = (i) => {
+			let a0 = angles[i] * Math.PI * 2.0;
+			let a1 = angles[i+1] * Math.PI * 2.0;
+			let a = (a0 + a1) * 0.5;
+			const v = vec3.fromValues(Math.cos(a) * r, 0, Math.sin(a) * r);
+
+			return v;
+		}
+
+		for(let i=0; i<num; i++) {
+			positions.push(getPos(i, 1));
+			positions.push(getPos(i+1, 1));
+			positions.push(getPos(i+1, 0));
+			positions.push(getPos(i, 0));
+
+			let n = getNormal(i);
+			normals.push(n);
+			normals.push(n);
+			normals.push(n);
+			normals.push(n);
+
+			uvs.push([i/num, 0]);
+			uvs.push([(i+1)/num, 0]);
+			uvs.push([(i+1)/num, 1]);
+			uvs.push([i/num, 1]);
+
+			indices.push(count * 4 + 0);
+			indices.push(count * 4 + 1);
+			indices.push(count * 4 + 2);
+			indices.push(count * 4 + 0);
+			indices.push(count * 4 + 2);
+			indices.push(count * 4 + 3);
+
+			count ++;
+		}
+
+
+		this.mesh = new alfrid.Mesh();
+		this.mesh.bufferVertex(positions);
+		this.mesh.bufferTexCoord(uvs);
+		this.mesh.bufferNormal(normals);
+		this.mesh.bufferIndex(indices);
 	}
 
 

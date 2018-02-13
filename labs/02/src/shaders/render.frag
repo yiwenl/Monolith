@@ -31,6 +31,7 @@ vec3 diffuse(vec3 N, vec3 L, vec3 C) {
 
 void main(void) {
 	if(distance(gl_PointCoord, vec2(.5)) > .5) discard;
+	if(vColor.a <= 0.0) discard;
 	
 	vec4 color = vec4(1.0);
 
@@ -38,5 +39,5 @@ void main(void) {
 	float fogAmount = fogFactorExp2(fogDistance - 4.5, FOG_DENSITY);
 	const vec4 fogColor = vec4(0.0, 0.0, 0.0, 1.0); // white
 
-	gl_FragColor = mix(color, fogColor, fogAmount);
+	gl_FragColor = color;
 }
