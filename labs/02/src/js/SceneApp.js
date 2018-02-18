@@ -22,7 +22,7 @@ class SceneApp extends Scene {
 		GL.enableAlphaBlending();
 		this.orbitalControl.rx.value = this.orbitalControl.ry.value = -0.1;
 		this.orbitalControl.radius.value = 11;
-		this.orbitalControl.rx.limit(-.1, -.1);
+		// this.orbitalControl.rx.limit(-.1, -.1);
 
 		this._mtxRotationMono = mat4.create();
 
@@ -73,7 +73,6 @@ class SceneApp extends Scene {
 
 		this._bCopy = new alfrid.BatchCopy();
 		this._bAxis = new alfrid.BatchAxis();
-		this._bDots = new alfrid.BatchDotsPlane();
 
 		// this._vModel = new ViewObjModel();
 		this._vMono = new ViewMonolith();
@@ -158,16 +157,14 @@ class SceneApp extends Scene {
 
 
 		this._vDome.render();
-		this._vTerrain.render(this.heightMap, this.normalMap, Assets.get('studio_radiance'), Assets.get('irr'));	
+		this._vTerrain.render(this.heightMap, this.normalMap, Assets.get('studio_radiance'), Assets.get('irr'), Assets.get('ao'), Assets.get('noise'));	
 
-		// this._vModel.render(Assets.get('studio_radiance'), Assets.get('irr'), Assets.get('aomap'));
 		this._vMono.render(this._captureSphere.front, this._captureSphere.back, this._captureSphere.frontMatrix, this._captureSphere.backMatrix, Assets.get('studio_radiance'), Assets.get('irr'));
 		this._vSphere.render(this._captureCylinder.front, this._captureCylinder.back, this._captureCylinder.frontMatrix, this._captureCylinder.backMatrix, Assets.get('studio_radiance'), Assets.get('irr'));
 		this._renderParticles();
 
-		// this._vMono.renderPosition();
-		// this._vMono.renderPosition();
-		// this._vSphere.render();
+
+		this._bAxis.draw();
 
 
 		let s = 100;
@@ -205,7 +202,7 @@ class SceneApp extends Scene {
 	}
 
 	get normalMap() {
-		return Assets.get('height');
+		return Assets.get('normal');
 	}
 }
 

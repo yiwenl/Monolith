@@ -1,5 +1,9 @@
 
 const assetsToLoad = [
+	{"id":"cylinder","url":"assets/obj/cylinder.obj","type":"text"},
+	{"id":"sphere","url":"assets/obj/sphere.obj","type":"text"},
+	{"id":"sphere1","url":"assets/obj/sphere1.obj","type":"text"},
+	{"id":"ao","url":"assets/img/ao.jpg","type":"jpg"},
 	{"id":"concreteDiffuse","url":"assets/img/concreteDiffuse.jpg","type":"jpg"},
 	{"id":"concreteNormal","url":"assets/img/concreteNormal.jpg","type":"jpg"},
 	{"id":"gradient","url":"assets/img/gradient.jpg","type":"jpg"},
@@ -13,10 +17,8 @@ const assetsToLoad = [
 	{"id":"irr_posz","url":"assets/img/irr_posz.hdr","type":"binary"},
 	{"id":"mountains","url":"assets/img/mountains.jpg","type":"jpg"},
 	{"id":"noise","url":"assets/img/noise.png","type":"png"},
-	{"id":"studio_radiance","url":"assets/img/studio_radiance.dds","type":"binary"},
-	{"id":"cylinder","url":"assets/obj/cylinder.obj","type":"text"},
-	{"id":"sphere","url":"assets/obj/sphere.obj","type":"text"},
-	{"id":"sphere1","url":"assets/obj/sphere1.obj","type":"text"}
+	{"id":"normal","url":"assets/img/normal.jpg","type":"jpg"},
+	{"id":"studio_radiance","url":"assets/img/studio_radiance.dds","type":"binary"}
 ];
 
 

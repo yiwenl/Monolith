@@ -16,6 +16,7 @@ varying vec3 vWsPosition;
 void main(void) {
 	vec4 wsPosition = uModelMatrix * vec4(aVertexPosition, 1.0);
 	vWsPosition = wsPosition.xyz;
+	wsPosition.y -= 2.5;
     gl_Position = uProjectionMatrix * uViewMatrix * wsPosition;
     vTextureCoord = aTextureCoord;
     vNormal = aNormal;

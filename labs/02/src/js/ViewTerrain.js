@@ -27,22 +27,37 @@ class ViewTerrain extends alfrid.View {
 		this.metallic = 0;
 		this.baseColor = [1, 1, 1];
 		this.y = -2.5;
+
+
+		this.sparkle = {
+			uSparkleScale:5.5,
+			uSparkleIntensity:15.0,
+		}
+
+
+		gui.add(this.sparkle, 'uSparkleScale', 1.0, 10.0);
+		gui.add(this.sparkle, 'uSparkleIntensity', 1.0, 30.0);
 	}
 
-	render(texture, textureNormal, textureRad, textureIrr) {
+	render(texture, textureNormal, textureRad, textureIrr, textureAO, textureNoise) {
 		const { numTiles } = this;
 		this.shader.bind();
 		this.shader.uniform(params.fog);
+		this.shader.uniform(this.sparkle);
 		this.shader.uniform("texture", "uniform1i", 0);
 		texture.bind(0);
 		this.shader.uniform("textureNormal", "uniform1i", 1);
 		textureNormal.bind(1);
+		this.shader.uniform("textureAO", "uniform1i", 2);
+		textureAO.bind(2);
+		this.shader.uniform("textureNoise", "uniform1i", 3);
+		textureNoise.bind(3);
 		this.shader.uniform("uHeight", "float", this.height);
 
-		this.shader.uniform('uRadianceMap', 'uniform1i', 3);
-		this.shader.uniform('uIrradianceMap', 'uniform1i', 2);
-		textureRad.bind(3);
-		textureIrr.bind(2);
+		this.shader.uniform('uRadianceMap', 'uniform1i', 5);
+		this.shader.uniform('uIrradianceMap', 'uniform1i', 4);
+		textureRad.bind(5);
+		textureIrr.bind(4);
 
 		this.shader.uniform('uBaseColor', 'uniform3fv', this.baseColor);
 		this.shader.uniform('uRoughness', 'uniform1f', this.roughness);

@@ -28,7 +28,7 @@ window.params = {
 	},
 	fog:{
 		uFogColor:[204/255, 209/255, 213/255],
-		uFogDensity:0.07
+		uFogDensity:0.09
 	}
 };
 
