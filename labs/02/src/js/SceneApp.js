@@ -7,7 +7,7 @@ import ViewTerrain from './ViewTerrain';
 import ViewSave from './ViewSave';
 import ViewRender from './ViewRender';
 import ViewSim from './ViewSim';
-import ViewFarground from './ViewFarground';
+import ViewDome from './ViewDome';
 import PositionCapture from './PositionCapture';
 import Assets from './Assets';
 
@@ -22,6 +22,7 @@ class SceneApp extends Scene {
 		GL.enableAlphaBlending();
 		this.orbitalControl.rx.value = this.orbitalControl.ry.value = -0.1;
 		this.orbitalControl.radius.value = 11;
+		this.orbitalControl.rx.limit(-.1, -.1);
 
 		this._mtxRotationMono = mat4.create();
 
@@ -58,10 +59,12 @@ class SceneApp extends Scene {
 			type:GL.FLOAT
 		};
 
-		const numTargets = 4;
+		const numTargets = 5;
 
 		this._fboCurrent  	= new alfrid.FrameBuffer(numParticles, numParticles, o, numTargets);
 		this._fboTarget  	= new alfrid.FrameBuffer(numParticles, numParticles, o, numTargets);
+
+		console.log(this._fboCurrent._textures);
 	}
 
 
@@ -76,7 +79,7 @@ class SceneApp extends Scene {
 		this._vMono = new ViewMonolith();
 		this._vSphere = new ViewSphere();
 		this._vTerrain = new ViewTerrain();
-		this._vFarground = new ViewFarground();
+		this._vDome = new ViewDome();
 
 		this._captureCylinder = new PositionCapture();
 		this._captureSphere = new PositionCapture();
@@ -112,7 +115,8 @@ class SceneApp extends Scene {
 			this._fboCurrent.getTexture(1), 
 			this._fboCurrent.getTexture(0), 
 			this._fboCurrent.getTexture(2),
-			this._fboCurrent.getTexture(3)
+			this._fboCurrent.getTexture(3),
+			this._fboCurrent.getTexture(4)
 		);
 		this._fboTarget.unbind();
 
@@ -129,7 +133,8 @@ class SceneApp extends Scene {
 			this._fboTarget.getTexture(0), 
 			this._fboCurrent.getTexture(0), 
 			p, 
-			this._fboCurrent.getTexture(2)
+			this._fboCurrent.getTexture(2),
+			this._fboCurrent.getTexture(4)
 		);
 	}
 
@@ -151,8 +156,8 @@ class SceneApp extends Scene {
 		GL.setMatrices(this.camera);
 		GL.clear(0, 0, 0, 0);
 
-		this._vFarground.render();
 
+		this._vDome.render();
 		this._vTerrain.render(this.heightMap, this.normalMap, Assets.get('studio_radiance'), Assets.get('irr'));	
 
 		// this._vModel.render(Assets.get('studio_radiance'), Assets.get('irr'), Assets.get('aomap'));
@@ -165,14 +170,12 @@ class SceneApp extends Scene {
 		// this._vSphere.render();
 
 
-		/*
 		let s = 100;
 
-		for(let i=0; i<4; i++) {
-			GL.viewport(i*s, 0, s, s);
-			this._bCopy.draw(this._fboCurrent.getTexture(i));	
-		}
-		*/		
+		// for(let i=0; i<5; i++) {
+		// 	GL.viewport(i*s, 0, s, s);
+		// 	this._bCopy.draw(this._fboCurrent.getTexture(i));	
+		// }
 
 		/*
 		let s = 200;

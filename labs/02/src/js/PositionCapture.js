@@ -36,7 +36,7 @@ class PositionCapture {
 		mat4.multiply(this._shadowMatrix1, biasMatrix, this._shadowMatrix1);
 
 		//	frame buffers
-		const size = 512 * 2;
+		const size = 512 * 1;
 		const params = {
 			type:GL.FLOAT,
 			minFilter:GL.LINEAR,

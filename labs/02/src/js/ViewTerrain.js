@@ -29,10 +29,10 @@ class ViewTerrain extends alfrid.View {
 		this.y = -2.5;
 	}
 
-
 	render(texture, textureNormal, textureRad, textureIrr) {
 		const { numTiles } = this;
 		this.shader.bind();
+		this.shader.uniform(params.fog);
 		this.shader.uniform("texture", "uniform1i", 0);
 		texture.bind(0);
 		this.shader.uniform("textureNormal", "uniform1i", 1);

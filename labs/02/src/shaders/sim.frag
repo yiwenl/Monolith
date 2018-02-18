@@ -8,6 +8,7 @@ uniform sampler2D textureVel;
 uniform sampler2D texturePos;
 uniform sampler2D textureExtra;
 uniform sampler2D textureOrg;
+uniform sampler2D textureLife;
 uniform float time;
 uniform float maxRadius;
 
@@ -128,6 +129,7 @@ void main(void) {
 	vec3 orgPos          = texture2D(textureOrg, vTextureCoord).rgb;
 	vec3 vel             = texture2D(textureVel, vTextureCoord).rgb;
 	vec3 extra           = texture2D(textureExtra, vTextureCoord).rgb;
+	vec3 life            = texture2D(textureLife, vTextureCoord).rgb;
 	float posOffset      = mix(extra.r, 1.0, .75) * .08;
 	vec3 acc             = curlNoise(pos * posOffset + time * .5);
 	acc.y 				 = (acc.y + 1.5) * 0.25;
@@ -143,8 +145,9 @@ void main(void) {
 	
 	float dist           = length(pos.xz);
 	if(dist > maxRadius) {
-		float f          = pow(2.0, (dist - maxRadius) * 2.0) * 0.2;
-		acc.xz              -= normalize(pos.xz) * f;
+		float fOffset    = smoothstep(7.0, -1.0, pos.y);
+		float f          = pow(2.0, (dist - maxRadius) * 2.0) * (0.2 + fOffset * 0.2);
+		acc.xz           -= normalize(pos.xz) * f;
 	}
 	
 	vel                  += acc * .01 * speedOffset;
@@ -154,13 +157,18 @@ void main(void) {
 	
 	pos                  += vel;
 
-	const float maxY = 10.0;
+	life.x += life.y;
+	life.x = min(life.x, 1.0);
+
+	const float maxY = 7.0;
 	if(pos.y > maxY) {
 		pos = orgPos;
+		life.x = 0.0;
 	}
 
 	gl_FragData[0] = vec4(pos, 1.0);
 	gl_FragData[1] = vec4(vel, 1.0);
 	gl_FragData[2] = vec4(extra, 1.0);
 	gl_FragData[3] = vec4(orgPos, 1.0);
+	gl_FragData[4] = vec4(life, 1.0);
 }

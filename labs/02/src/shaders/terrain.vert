@@ -23,6 +23,7 @@ varying vec3 vWsPosition;
 varying vec3 vEyePosition;
 varying vec3 vWsNormal;
 
+
 void main(void) {
 	vec2 uv                 = aTextureCoord * uUVOffset.xy + uUVOffset.zw;
 	float h                 = texture2D(texture, uv).r;

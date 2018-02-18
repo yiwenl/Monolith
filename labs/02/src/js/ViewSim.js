@@ -20,11 +20,13 @@ class ViewSim extends alfrid.View {
 		this.shader.uniform('texturePos', 'uniform1i', 1);
 		this.shader.uniform('textureExtra', 'uniform1i', 2);
 		this.shader.uniform("textureOrg", "uniform1i", 3);
+		this.shader.uniform("textureLife", "uniform1i", 4);
+		
 		
 	}
 
 
-	render(textureVel, texturePos, textureExtra, textureOrg) {
+	render(textureVel, texturePos, textureExtra, textureOrg, textureLife) {
 		this.time += .01;
 		this.shader.bind();
 		this.shader.uniform('time', 'float', this.time);
@@ -33,6 +35,7 @@ class ViewSim extends alfrid.View {
 		texturePos.bind(1);
 		textureExtra.bind(2);
 		textureOrg.bind(3);
+		textureLife.bind(4);
 
 		GL.draw(this.mesh);
 	}

@@ -17,7 +17,7 @@ if(document.body) {
 window.params = {
 	gamma:2.2,
 	exposure:5,
-	numParticles:256,
+	numParticles:200,
 	skipCount:6,
 	maxRadius: 1.,
 	monolith: {
@@ -27,7 +27,8 @@ window.params = {
 		uBaseColor:[1, 1, 1]
 	},
 	fog:{
-		
+		uFogColor:[204/255, 209/255, 213/255],
+		uFogDensity:0.07
 	}
 };
 
@@ -87,6 +88,8 @@ function _init3D() {
 
 	//	CREATE SCENE
 	const scene = new SceneApp();
+
+	gui.add(params.fog, 'uFogDensity', .001, 0.1).name('Fog Density');
 
 	
 }

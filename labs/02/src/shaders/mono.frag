@@ -126,7 +126,10 @@ void main(void) {
 	vec3 nOffset 		= texture2D( textureNormal, vTextureCoord).rgb;
 	vec3 N 				= normalize( vWsNormal + nOffset * 0.15 );
 	vec3 V 				= normalize( vEyePosition );
-	vec3 ink 			= texture2D( textureDiffuse, gl_FragCoord.xy/uResolution).rgb;
+
+	vec2 uv 			= gl_FragCoord.xy/uResolution;
+	uv 					= (uv - 0.5) * 5.0 + 0.5;
+	vec3 ink 			= texture2D( textureDiffuse, uv).rgb;
 	vec3 color 			= getPbr(N, V, ink, uRoughness, uMetallic, uSpecular);
 
 	float angleToUp = dot(vNormal, UP);

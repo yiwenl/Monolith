@@ -33,7 +33,7 @@ void main(void) {
 	if(distance(gl_PointCoord, vec2(.5)) > .5) discard;
 	if(vColor.a <= 0.0) discard;
 	
-	vec4 color = vec4(1.0);
+	vec4 color = vColor;
 
 	float fogDistance = gl_FragCoord.z / gl_FragCoord.w;
 	float fogAmount = fogFactorExp2(fogDistance - 4.5, FOG_DENSITY);

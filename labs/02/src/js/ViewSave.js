@@ -17,6 +17,7 @@ class ViewSave extends alfrid.View {
 		let coords = [];
 		let indices = []; 
 		let extras = [];
+		let life = [];
 		let count = 0;
 
 		let numParticles = params.numParticles;
@@ -35,7 +36,7 @@ class ViewSave extends alfrid.View {
 			mat4.rotateZ(m, m, Math.random() * Math.PI * 2);
 
 			vec3.transformMat4(v, v, m);
-			v[1] = random(-params.maxRadius, 10.0);
+			v[1] = random(-params.maxRadius, 7.0);
 			return v;
 		}
 
@@ -48,6 +49,7 @@ class ViewSave extends alfrid.View {
 				uy = j / numParticles * 2.0 - 1.0 + .5 / numParticles;
 
 				extras.push([Math.random(), Math.random(), Math.random()]);
+				life.push([-Math.random() * 5.0, random(.01, .05), Math.random()]);
 				coords.push([ux, uy]);
 				indices.push(count);
 				count ++;
@@ -59,6 +61,7 @@ class ViewSave extends alfrid.View {
 		this.mesh = new alfrid.Mesh(GL.POINTS);
 		this.mesh.bufferVertex(positions);
 		this.mesh.bufferData(extras, 'aExtra', 3);
+		this.mesh.bufferData(life, 'aLife', 3);
 		this.mesh.bufferTexCoord(coords);
 		this.mesh.bufferIndex(indices);
 	}

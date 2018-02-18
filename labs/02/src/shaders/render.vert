@@ -11,6 +11,7 @@ uniform mat4 uShadowMatrix;
 uniform sampler2D textureCurr;
 uniform sampler2D textureNext;
 uniform sampler2D textureExtra;
+uniform sampler2D textureLife;
 uniform float percent;
 uniform float time;
 uniform vec2 uViewport;
@@ -33,13 +34,13 @@ void main(void) {
 
 	float g 	 = sin(extra.r + time * mix(extra.b, 1.0, .5));
 	g 			 = smoothstep(0.0, 1.0, g);
-	g 			 = mix(g, 1.0, .75);
-	float a 	 = 1.0;
+	g 			 = mix(g, 1.0, .25);
+	float a 	 = texture2D(textureLife, uv).r;
 	if(posNext.y < posCurr.y) a = 0.0;
 	vColor       = vec4(vec3(g), a);
 
 	float distOffset = uViewport.y * uProjectionMatrix[1][1] * radius / gl_Position.w;
-    gl_PointSize = distOffset * (1.0 + extra.x * 1.0);
+    gl_PointSize = distOffset * (1.0 + (extra.x+g) * 0.7);
 
 	vNormal 	 = aNormal;
 	vShadowCoord = uShadowMatrix * wsPosition;
