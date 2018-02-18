@@ -32,8 +32,8 @@ class ViewTerrain extends alfrid.View {
 
 
 		this.sparkle = {
-			uSparkleScale:50,
-			uSparkleIntensity:2.0,
+			uSparkleScale:20,
+			uSparkleIntensity:14.0,
 		}
 
 	}

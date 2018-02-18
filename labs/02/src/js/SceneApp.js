@@ -8,6 +8,7 @@ import ViewSave from './ViewSave';
 import ViewRender from './ViewRender';
 import ViewSim from './ViewSim';
 import ViewDome from './ViewDome';
+import ViewSnow from './ViewSnow';
 import PositionCapture from './PositionCapture';
 import Assets from './Assets';
 
@@ -21,7 +22,7 @@ class SceneApp extends Scene {
 		this.resize();
 		GL.enableAlphaBlending();
 
-		const viewAngle = -0.15;
+		const viewAngle = -0.17;
 		const zoom = 10;
 		this.orbitalControl.rx.value = this.orbitalControl.ry.value = viewAngle;
 		this.orbitalControl.radius.value = zoom;
@@ -90,6 +91,7 @@ class SceneApp extends Scene {
 		this._vSphere = new ViewSphere();
 		this._vTerrain = new ViewTerrain();
 		this._vDome = new ViewDome();
+		this._vSnow = new ViewSnow();
 
 		this._captureCylinder = new PositionCapture();
 		this._captureSphere = new PositionCapture();
@@ -174,6 +176,7 @@ class SceneApp extends Scene {
 		this._vMono.render(this._captureSphere.front, this._captureSphere.back, this._captureSphere.frontMatrix, this._captureSphere.backMatrix, Assets.get('studio_radiance'), Assets.get('irr'));
 		this._vSphere.render(this._captureCylinder.front, this._captureCylinder.back, this._captureCylinder.frontMatrix, this._captureCylinder.backMatrix, Assets.get('studio_radiance'), Assets.get('irr'));
 		this._renderParticles();
+		this._vSnow.render();
 	}
 
 

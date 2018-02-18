@@ -88,8 +88,4 @@ function _init3D() {
 
 	//	CREATE SCENE
 	const scene = new SceneApp();
-
-	gui.add(params.fog, 'uFogDensity', .001, 0.1).name('Fog Density');
-
-	
 }
