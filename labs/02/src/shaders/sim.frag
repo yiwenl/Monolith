@@ -11,6 +11,7 @@ uniform sampler2D textureOrg;
 uniform sampler2D textureLife;
 uniform float time;
 uniform float maxRadius;
+uniform float uRadiusOffset;
 uniform float uTouchOffset;
 
 vec3 mod289(vec3 x) { return x - floor(x * (1.0 / 289.0)) * 289.0;  }
@@ -139,21 +140,23 @@ void main(void) {
 	float speedOffset    = mix(extra.g, 1.0, .5);
 
 
+	float radius 		 = maxRadius * (1.0 + uRadiusOffset * 0.1);
 	vec2 dir 			 = normalize(pos.xz);
 	dir 				 = rotate(dir, PI * 0.6);
-	float f 			 = length(pos.xz) / maxRadius;
+	float f 			 = length(pos.xz) / radius;
 	f 					 = smoothstep(0.0, 1.0, f) * mix(extra.g, 1.0, .5);
 	acc.xz 				 += dir * f * 0.65;
 
 	
 	float dist           = length(pos.xz);
-	if(dist > maxRadius) {
+
+	if(dist > radius) {
 		float fOffset    = smoothstep(7.0, -1.0, pos.y);
-		float f          = pow(2.0, (dist - maxRadius) * 2.0) * (0.2 + fOffset * 0.2);
+		float f          = pow(2.0, (dist - radius) * 2.0) * (0.2 + fOffset * 0.2);
 		acc.xz           -= normalize(pos.xz) * f;
 	}
 	
-	vel                  += acc * .01 * speedOffset * (1.0 + uTouchOffset * 0.5);
+	vel                  += acc * .01 * speedOffset * (1.0 + uTouchOffset * 0.5 + uRadiusOffset);
 	
 	const float decrease = .96;
 	vel                  *= decrease;

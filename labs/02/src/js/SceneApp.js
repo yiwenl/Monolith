@@ -22,8 +22,10 @@ class SceneApp extends Scene {
 		GL.enableAlphaBlending();
 
 		const viewAngle = -0.15;
+		const zoom = 10;
 		this.orbitalControl.rx.value = this.orbitalControl.ry.value = viewAngle;
-		this.orbitalControl.radius.value = 10;
+		this.orbitalControl.radius.value = zoom;
+		this.orbitalControl.radius.limit(zoom, zoom);
 		this.orbitalControl.rx.limit(viewAngle, viewAngle);
 
 		this._mtxRotationMono = mat4.create();
@@ -44,9 +46,16 @@ class SceneApp extends Scene {
 		this._detector = new TouchDetector(mesh, this.camera);
 		this._detector.on('onHit', ()=>this._onHit());
 		this._detector.on('onUp', ()=>this._onUp());
+		this._detector.on('onDown', ()=>this._onDown());
 		this._touchOffset = new alfrid.EaseNumber(0);
+		this._radiusOffset = new alfrid.EaseNumber(0);
 	}
 
+
+	_onDown() {
+		this._radiusOffset.setTo(10);
+		this._radiusOffset.value = 0;
+	}
 
 	_onHit() {
 		this._touchOffset.value = 1;
@@ -117,7 +126,8 @@ class SceneApp extends Scene {
 			this._fboCurrent.getTexture(2),
 			this._fboCurrent.getTexture(3),
 			this._fboCurrent.getTexture(4),
-			this._touchOffset.value
+			this._touchOffset.value,
+			this._radiusOffset.value
 		);
 		this._fboTarget.unbind();
 
