@@ -5,7 +5,7 @@
 precision highp float;
 uniform sampler2D texture;
 uniform sampler2D textureNormal;
-uniform sampler2D textureAO;
+uniform sampler2D textureGradient;
 uniform sampler2D textureNoise;
 uniform samplerCube uRadianceMap;
 uniform samplerCube uIrradianceMap;
@@ -123,6 +123,10 @@ float fogFactorExp2(
   return 1.0 - clamp(exp2(d * d * LOG2), 0.0, 1.0);
 }
 
+float luma(vec3 color) {
+  return dot(color, vec3(0.299, 0.587, 0.114));
+}
+
 
 void main(void) {
 	vec3 normal       = texture2D(textureNormal, vTextureCoord).rbg * 2.0 - 1.0;
@@ -131,21 +135,33 @@ void main(void) {
 	vec3 V            = normalize( vEyePosition );
 	
 	vec3 color        = getPbr(N, V, uBaseColor, uRoughness, uMetallic, uSpecular);
-	vec3 ao           = texture2D(textureAO, vTextureCoord).rgb;
-	color             *= ao;
 	
 	vec2 uvNoise      = vTextureCoord * uSparkleScale;
 	vec3 sparkleMap   = texture2D(textureNoise, uvNoise).rgb - 0.5;
 	sparkleMap        = normalize(normalize(sparkleMap) + normal);
+
+	// apply the tone-mapping
+	color				= Uncharted2Tonemap( color * uExposure );
+	// white balance
+	color				= color * ( 1.0 / Uncharted2Tonemap( vec3( 20.0 ) ) );
+	
+	// gamma correction
+	color				= pow( color, vec3( 1.0 / uGamma ) );
 	
 	float sparkle     = dot(-V, sparkleMap);
 	sparkle           = pow(saturate(sparkle), uSparkleIntensity);
-	color.rgb         += sparkle;
+	color.rgb         += sparkle * 0.35;
+
 	
-	float fogDistance = gl_FragCoord.z / gl_FragCoord.w;
-	float fogAmount   = fogFactorExp2(fogDistance, uFogDensity);
+	// float fogDistance = gl_FragCoord.z / gl_FragCoord.w;
+	// float fogAmount   = fogFactorExp2(fogDistance, uFogDensity);
+
+
+	float br = 1.0 - luma(color);
+	vec2 uvGrad = vec2(.5, br);
+	color.rgb = texture2D(textureGradient, uvGrad).rgb;
 	
-	color.rgb         = mix(color.rgb, uFogColor, fogAmount);
+	// color.rgb         = mix(color.rgb, uFogColor, fogAmount);
 	
 	gl_FragColor      = vec4(color, 1.0);
 }

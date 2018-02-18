@@ -16,6 +16,7 @@ class ViewDome extends alfrid.View {
 		this.size = 20;
 		this.mesh = alfrid.Geom.sphere(20, 24, true);
 		this.texture = Assets.get('gradient');
+		this.texture1 = Assets.get('gradient1');
 		this.textureNoise = Assets.get('noise');
 	}
 
@@ -29,6 +30,8 @@ class ViewDome extends alfrid.View {
 		this.texture.bind(0);
 		this.shader.uniform("textureNoise", "uniform1i", 1);
 		this.textureNoise.bind(1);
+		this.shader.uniform("texture1", "uniform1i", 2);
+		this.texture1.bind(2);
 		this.shader.uniform("uResolution", "vec2", [GL.width, GL.height]);
 
 

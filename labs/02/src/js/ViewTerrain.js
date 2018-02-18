@@ -13,7 +13,7 @@ class ViewTerrain extends alfrid.View {
 
 	_init() {
 		const size = 25;
-		this.numTiles = 2;
+		this.numTiles = 4;
 		const s = size / this.numTiles;
 		this.tileSize = s;
 		this.sx = -size / 2 + this.tileSize/2;
@@ -23,23 +23,25 @@ class ViewTerrain extends alfrid.View {
 		this.height = 1.5;
 
 		this.roughness = 1;
-		this.specular = 0;
+		this.specular = .25;
 		this.metallic = 0;
-		this.baseColor = [1, 1, 1];
+
+		const g = .15;
+		this.baseColor = [g, g, g ];
 		this.y = -2.5;
 
 
 		this.sparkle = {
-			uSparkleScale:5.5,
-			uSparkleIntensity:15.0,
+			uSparkleScale:50,
+			uSparkleIntensity:2.0,
 		}
 
 
-		gui.add(this.sparkle, 'uSparkleScale', 1.0, 10.0);
-		gui.add(this.sparkle, 'uSparkleIntensity', 1.0, 30.0);
+		gui.add(this.sparkle, 'uSparkleScale', 1.0, 50.0);
+		gui.add(this.sparkle, 'uSparkleIntensity', 1.0, 50.0);
 	}
 
-	render(texture, textureNormal, textureRad, textureIrr, textureAO, textureNoise) {
+	render(texture, textureNormal, textureRad, textureIrr, textureGradient, textureNoise) {
 		const { numTiles } = this;
 		this.shader.bind();
 		this.shader.uniform(params.fog);
@@ -48,8 +50,8 @@ class ViewTerrain extends alfrid.View {
 		texture.bind(0);
 		this.shader.uniform("textureNormal", "uniform1i", 1);
 		textureNormal.bind(1);
-		this.shader.uniform("textureAO", "uniform1i", 2);
-		textureAO.bind(2);
+		this.shader.uniform("textureGradient", "uniform1i", 2);
+		textureGradient.bind(2);
 		this.shader.uniform("textureNoise", "uniform1i", 3);
 		textureNoise.bind(3);
 		this.shader.uniform("uHeight", "float", this.height);

@@ -3,6 +3,7 @@ precision highp float;
 varying vec3 vWsPosition;
 
 uniform sampler2D texture;
+uniform sampler2D texture1;
 uniform sampler2D textureNoise;
 uniform float uSize;
 uniform vec3 uFogColor;
@@ -19,17 +20,24 @@ float fogFactorExp2(
 }
 
 
+float luma(vec3 color) {
+  return dot(color, vec3(0.299, 0.587, 0.114));
+}
+
+
 void main(void) {
 
-	vec2 uv 		  = gl_FragCoord.xy / uResolution * 3.0;
-	vec2 colorNoise  = texture2D(textureNoise, uv).rg - 0.5;;
-	// color.rgb 		  *= 1.0 + colorNoise * 0.15;
-
+	vec2 uvNoise 		  = gl_FragCoord.xy / uResolution * 3.0;
+	vec2 colorNoise  = texture2D(textureNoise, uvNoise).rg - 0.5;;
 	float y           = abs(vWsPosition.y / uSize) * 0.5 + 0.5;
 
-	vec4 color        = texture2D(texture, vec2(.5, y) + colorNoise * 0.015);
+	vec2 uv 		  = vec2(.5, y) + colorNoise * 0.015;
+	vec4 color        = texture2D(texture, uv);
 
-
+	float br = 1.0 - luma(color.rgb);
+	vec2 uvGrad = vec2(.5, br);
+	vec3 colorGrad = texture2D(texture1, uvGrad).rgb;
+	color.rgb 		= mix(color.rgb, colorGrad, .5);
 	
 	float fogDistance = gl_FragCoord.z / gl_FragCoord.w;
 	float fogAmount   = fogFactorExp2(fogDistance, uFogDensity);

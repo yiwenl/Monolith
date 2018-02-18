@@ -20,9 +20,11 @@ class SceneApp extends Scene {
 		this._count = 0;
 		this.resize();
 		GL.enableAlphaBlending();
-		this.orbitalControl.rx.value = this.orbitalControl.ry.value = -0.1;
+
+		const viewAngle = -0.15;
+		this.orbitalControl.rx.value = this.orbitalControl.ry.value = viewAngle;
 		this.orbitalControl.radius.value = 11;
-		// this.orbitalControl.rx.limit(-.1, -.1);
+		this.orbitalControl.rx.limit(viewAngle, viewAngle);
 
 		this._mtxRotationMono = mat4.create();
 
@@ -71,10 +73,7 @@ class SceneApp extends Scene {
 	_initViews() {
 		console.log('init views');
 
-		this._bCopy = new alfrid.BatchCopy();
-		this._bAxis = new alfrid.BatchAxis();
-
-		// this._vModel = new ViewObjModel();
+		// this._bCopy = new alfrid.BatchCopy();
 		this._vMono = new ViewMonolith();
 		this._vSphere = new ViewSphere();
 		this._vTerrain = new ViewTerrain();
@@ -157,37 +156,12 @@ class SceneApp extends Scene {
 
 
 		this._vDome.render();
-		this._vTerrain.render(this.heightMap, this.normalMap, Assets.get('studio_radiance'), Assets.get('irr'), Assets.get('ao'), Assets.get('noise'));	
+		this._vTerrain.render(this.heightMap, this.normalMap, Assets.get('studio_radiance'), Assets.get('irr'), Assets.get('gradient1'), Assets.get('noise'));	
 
 		this._vMono.render(this._captureSphere.front, this._captureSphere.back, this._captureSphere.frontMatrix, this._captureSphere.backMatrix, Assets.get('studio_radiance'), Assets.get('irr'));
 		this._vSphere.render(this._captureCylinder.front, this._captureCylinder.back, this._captureCylinder.frontMatrix, this._captureCylinder.backMatrix, Assets.get('studio_radiance'), Assets.get('irr'));
 		this._renderParticles();
 
-
-		this._bAxis.draw();
-
-
-		let s = 100;
-
-		// for(let i=0; i<5; i++) {
-		// 	GL.viewport(i*s, 0, s, s);
-		// 	this._bCopy.draw(this._fboCurrent.getTexture(i));	
-		// }
-
-		/*
-		let s = 200;
-		GL.viewport(0, 0, s, s);
-		this._bCopy.draw(this._captureCylinder.front);
-
-		GL.viewport(s, 0, s, s);
-		this._bCopy.draw(this._captureCylinder.back);
-
-		GL.viewport(s * 2, 0, s, s);
-		this._bCopy.draw(this._captureSphere.front);
-
-		GL.viewport(s * 3, 0, s, s);
-		this._bCopy.draw(this._captureSphere.back);
-		//*/
 	}
 
 
