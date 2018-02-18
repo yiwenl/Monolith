@@ -23,7 +23,7 @@ class ViewTerrain extends alfrid.View {
 		this.height = 1.5;
 
 		this.roughness = 1;
-		this.specular = .25;
+		this.specular = .1;
 		this.metallic = 0;
 
 		const g = .15;
@@ -36,9 +36,6 @@ class ViewTerrain extends alfrid.View {
 			uSparkleIntensity:2.0,
 		}
 
-
-		gui.add(this.sparkle, 'uSparkleScale', 1.0, 50.0);
-		gui.add(this.sparkle, 'uSparkleIntensity', 1.0, 50.0);
 	}
 
 	render(texture, textureNormal, textureRad, textureIrr, textureGradient, textureNoise) {

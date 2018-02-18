@@ -1,6 +1,6 @@
 // SceneApp.js
 
-import alfrid, { Scene, GL } from 'alfrid';
+import alfrid, { Scene, GL, TouchDetector } from 'alfrid';
 import ViewMonolith from './ViewMonolith';
 import ViewSphere from './ViewSphere';
 import ViewTerrain from './ViewTerrain';
@@ -23,12 +23,11 @@ class SceneApp extends Scene {
 
 		const viewAngle = -0.15;
 		this.orbitalControl.rx.value = this.orbitalControl.ry.value = viewAngle;
-		this.orbitalControl.radius.value = 11;
+		this.orbitalControl.radius.value = 10;
 		this.orbitalControl.rx.limit(viewAngle, viewAngle);
 
 		this._mtxRotationMono = mat4.create();
 
-		const f = gui.addFolder('Camera');
 		const cam = {
 			y:0
 		}
@@ -40,15 +39,21 @@ class SceneApp extends Scene {
 
 		updateCameraY();
 
-		f.add(this.orbitalControl.radius, 'value', 5, 20).name('Zoom');
-		f.add(cam, 'y', -10, 10).name('Camera Y').onChange( updateCameraY );
-		// f.open();
+		const s = 0.8;
+		const mesh = alfrid.Geom.sphere(s, 12);
+		this._detector = new TouchDetector(mesh, this.camera);
+		this._detector.on('onHit', ()=>this._onHit());
+		this._detector.on('onUp', ()=>this._onUp());
+		this._touchOffset = new alfrid.EaseNumber(0);
+	}
 
-		const fMono = gui.addFolder('monolith');
-		// fMono.open();
-		fMono.add(params.monolith, 'uRoughness', 0, 1);
-		fMono.add(params.monolith, 'uSpecular', 0, 1);
-		fMono.add(params.monolith, 'uMetallic', 0, 1);
+
+	_onHit() {
+		this._touchOffset.value = 1;
+	}
+
+	_onUp() {
+		this._touchOffset.value = 0;
 	}
 
 	_initTextures() {
@@ -65,8 +70,6 @@ class SceneApp extends Scene {
 
 		this._fboCurrent  	= new alfrid.FrameBuffer(numParticles, numParticles, o, numTargets);
 		this._fboTarget  	= new alfrid.FrameBuffer(numParticles, numParticles, o, numTargets);
-
-		console.log(this._fboCurrent._textures);
 	}
 
 
@@ -82,7 +85,6 @@ class SceneApp extends Scene {
 		this._captureCylinder = new PositionCapture();
 		this._captureSphere = new PositionCapture();
 		this._captureCylinder.capture(this._vMono);
-
 
 		//	views
 		this._vRender = new ViewRender();
@@ -114,7 +116,8 @@ class SceneApp extends Scene {
 			this._fboCurrent.getTexture(0), 
 			this._fboCurrent.getTexture(2),
 			this._fboCurrent.getTexture(3),
-			this._fboCurrent.getTexture(4)
+			this._fboCurrent.getTexture(4),
+			this._touchOffset.value
 		);
 		this._fboTarget.unbind();
 
@@ -161,7 +164,6 @@ class SceneApp extends Scene {
 		this._vMono.render(this._captureSphere.front, this._captureSphere.back, this._captureSphere.frontMatrix, this._captureSphere.backMatrix, Assets.get('studio_radiance'), Assets.get('irr'));
 		this._vSphere.render(this._captureCylinder.front, this._captureCylinder.back, this._captureCylinder.frontMatrix, this._captureCylinder.backMatrix, Assets.get('studio_radiance'), Assets.get('irr'));
 		this._renderParticles();
-
 	}
 
 

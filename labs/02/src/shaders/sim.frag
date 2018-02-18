@@ -11,6 +11,7 @@ uniform sampler2D textureOrg;
 uniform sampler2D textureLife;
 uniform float time;
 uniform float maxRadius;
+uniform float uTouchOffset;
 
 vec3 mod289(vec3 x) { return x - floor(x * (1.0 / 289.0)) * 289.0;  }
 
@@ -122,6 +123,8 @@ vec2 rotate(vec2 v, float a) {
 	return m * v;
 }
 
+
+
 const float PI = 3.141592653;
 
 void main(void) {
@@ -150,20 +153,21 @@ void main(void) {
 		acc.xz           -= normalize(pos.xz) * f;
 	}
 	
-	vel                  += acc * .01 * speedOffset;
+	vel                  += acc * .01 * speedOffset * (1.0 + uTouchOffset * 0.5);
 	
 	const float decrease = .96;
 	vel                  *= decrease;
 	
 	pos                  += vel;
 
-	life.x += life.y;
+	float lifeOffset = mix(uTouchOffset, 1.0, .25);
+	life.x += life.y * lifeOffset;
 	life.x = min(life.x, 1.0);
 
 	const float maxY = 7.0;
 	if(pos.y > maxY) {
 		pos = orgPos;
-		life.x = 0.0;
+		life.x = -extra.b;
 	}
 
 	gl_FragData[0] = vec4(pos, 1.0);
